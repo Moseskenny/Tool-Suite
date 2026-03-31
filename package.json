@@ -1,0 +1,34 @@
+{
+  "name": "toolsuite",
+  "version": "1.0.0",
+  "description": "Premium Utility Toolkit",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.toolsuite.app",
+    "productName": "ToolSuite",
+    "extraResources": [
+      {
+        "from": "backend/dist/toolsuite-engine.exe",
+        "to": "toolsuite-engine.exe"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/p.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^30.5.1",
+    "electron-builder": "^26.8.1"
+  }
+}

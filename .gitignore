@@ -1,0 +1,26 @@
+# Node dependencies (The 7k file culprit)
+node_modules/
+build/p.ico
+
+# Python build files and cache
+backend/build/
+backend/dist/
+backend/__pycache__/
+backend/outputs/
+backend/reports/
+backend/uploads/
+backend/modules/New Text Document.txt
+
+*.pyc
+*.spec
+
+# Electron build artifacts
+dist/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Local environment / secrets
+.env
+backend/venv/
