@@ -1,0 +1,4 @@
+pandas
+opencv-python
+pdf2docx
+pyinstaller
