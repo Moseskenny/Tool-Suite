@@ -7,27 +7,60 @@
 
 ---
 
+
 ## 📸 Interface Preview :
 
-<img width="1200" height="800" alt="image" src="https://github.com/user-attachments/assets/f442869b-6ab9-401a-aeb1-0276b999dc03" />
+<img width="1200" height="800" alt="dashboard" src="https://github.com/user-attachments/assets/d07813e2-69a8-437e-bfa0-8a146fa2d0ba" />
 
 
 
-<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/924087d6-ad5b-47e0-9d83-c4fc1b198ba2" />
+
+<img width="1200" height="800" alt="2" src="https://github.com/user-attachments/assets/1d8aa72c-0175-438e-88a4-31445df06674" />
 
 
 
-<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/e1a0644c-f4a3-4f74-999f-aff30eda788a" />
+
+<img width="1200" height="800" alt="3" src="https://github.com/user-attachments/assets/dc21eb9a-560c-4e03-93d3-72209096e7cd" />
+
+
+
+
+
+<img width="1200" height="800" alt="4" src="https://github.com/user-attachments/assets/92fa4166-aa6d-422f-b4a3-8316b5795aef" />
+
+
 
 
 ---
 
-## 🚀 Core Features
+## 🚀 What's New in Version 1.2.0
+- **Native Screen Recorder:** High-fidelity capture with a sleek preview dashboard and real-time recording timer.
+- **Professional PDF Toolkit:** Offline PDF merging and splitting with an intuitive drag-to-reorder interface.
+- **Fluid Visual Experience:** Completely reworked animations and transitions for a smoother, high-end user experience.
+- **Advanced Image Compressor:** Real-time "Original vs. Estimated" size previews powered by optimized OpenCV encoding.
+- **Engine Overhaul:** Rebuilt Python analyzer for faster processing and lower CPU overhead.
 
-* **🖼️ Image Compressor:** Reduce file sizes without losing quality. Powered by **OpenCV**.
-* **📂 File Organizer:** Instantly declutter your folders with automated sorting logic.
-* **📄 Doc Converter:** Seamlessly convert PDFs to editable Word documents offline.
-* **📊 Expense Analyzer:** Transform messy CSV/Excel data into clean, actionable insights using **Pandas**.
+---
+
+## ✨ Core Features
+
+### 🎥 Native Screen Recorder (New)
+Capture your workflow with ease. Tool-Suite now features an Electron-native recording engine that ensures smooth playback at native speeds without heavy system lag.
+
+### 📄 Professional PDF Toolkit (New)
+* **Merge & Split:** Combine multiple documents or break large files into individual pages instantly.
+* **Drag-to-Reorder:** Visually organize your document sequence before processing—all 100% offline.
+
+### 🖼️ Smart Image Compressor
+Reduce file sizes without compromising visual quality. 
+* **Side-by-Side Comparison:** View original vs. estimated compressed sizes before you commit.
+* **OpenCV Powered:** High-speed encoding for JPEG, PNG, and WebP.
+
+### 📂 Automated File Organizer
+Instantly declutter your workspace. Our intelligent logic categorizes files and cleans up your desktop and downloads folder with a single click.
+
+### 📊 Expense Analyzer
+Gain data-driven insights into your spending patterns. Securely process your financial data locally using a high-performance Pandas backend.
 
 ---
 
