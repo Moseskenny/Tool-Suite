@@ -30,8 +30,21 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
                     Expense Analysis
                 </button>
+<<<<<<< HEAD
+                <button class="nav-btn" onclick="selectTool('recorder')" id="btn-recorder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3" fill="currentColor"></circle></svg>
+                    Screen Recorder
+                </button>
+                <button class="nav-btn" onclick="selectTool('pdftool')" id="btn-pdftool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    PDF Toolkit
+                </button>
+            </div>
+            <div class="sidebar-footer"><p>v1.1.0 </p></div>
+=======
             </div>
             <div class="sidebar-footer"><p>v1.0.0 | Premium</p></div>
+>>>>>>> c92ab8401fdf1d0d1268fe68e703ad6c984e99e4
         </nav>
 
         <main class="workspace">
@@ -54,7 +67,11 @@
                 <div id="drop-zone" class="drop-zone elegant-card">
                     <div class="drop-zone-content">
                         <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+<<<<<<< HEAD
+                        <p>Click to <strong>Select File</strong></p>
+=======
                         <p>Click to <strong>Select File</strong> or Drag & Drop</p>
+>>>>>>> c92ab8401fdf1d0d1268fe68e703ad6c984e99e4
                     </div>
                 </div>
                 <input type="file" id="file-input" multiple hidden>
@@ -65,8 +82,13 @@
                         <input type="range" id="quality-slider" min="1" max="100" value="80" class="modern-slider">
                     </div>
                     <div class="preview-comparison">
+<<<<<<< HEAD
+                        <div class="preview-box"><label>Original</label><img id="original-preview"><p id="original-size" class="estimated-size"></p></div>
+                        <div class="preview-box"><label>Compressed</label><img id="compressed-preview"><p id="estimated-size" class="estimated-size"></p></div>
+=======
                         <div class="preview-box"><label>Original</label><img id="original-preview"></div>
                         <div class="preview-box"><label>Compressed</label><img id="compressed-preview"></div>
+>>>>>>> c92ab8401fdf1d0d1268fe68e703ad6c984e99e4
                     </div>
                 </div>
 
@@ -80,6 +102,64 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                <div id="recorder-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="recorder-header">
+                        <span class="recorder-title">Screen Recorder</span>
+                        <div class="recorder-meta">
+                            <span class="status-indicator" id="recorder-status-indicator"></span>
+                            <span id="recorder-fps">30 FPS</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-preview-area" id="recorder-preview">
+                        <div class="preview-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                            <span>Ready to record</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-info-bar">
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>Full Screen</span>
+                        </div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span id="recorder-duration">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-action">
+                        <button class="btn-record" id="record-btn" onclick="startRecording()">
+                            <span class="record-icon">●</span>
+                            <span>Start Recording</span>
+                        </button>
+                        <button class="btn-record btn-recording" id="stop-btn" onclick="stopRecording()" style="display:none;">
+                            <span class="record-icon">■</span>
+                            <span>Stop Recording</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pdftool-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="pdftool-modes">
+                        <button class="mode-btn active" id="merge-mode-btn" onclick="selectPdfMode('merge')">Merge PDFs</button>
+                        <button class="mode-btn" id="split-mode-btn" onclick="selectPdfMode('split')">Split PDF</button>
+                    </div>
+                    <div id="pdf-list" class="pdf-file-list"></div>
+                    <div id="split-options" class="split-options" style="display:none; margin-top: 15px;">
+                        <button class="btn-primary btn-green" id="analyze-btn" onclick="analyzePdf()" style="margin-bottom: 15px;">Analyze PDF</button>
+                        <div id="analyze-result" class="analyze-result" style="display:none; margin-bottom: 15px;"></div>
+                        <div id="split-input-area" class="split-input-area" style="display:none;">
+                            <label>Split at page: </label>
+                            <input type="number" id="split-page-input" min="1" value="1" style="width: 80px; padding: 8px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
+                    </div>
+                </div>
+
+=======
+>>>>>>> c92ab8401fdf1d0d1268fe68e703ad6c984e99e4
                 <div class="action-bar" id="action-bar" style="display:none; margin-top: 25px; text-align: center;">
                     <button class="btn-primary" id="process-btn" onclick="processFiles()">Process Task</button>
                 </div>
@@ -90,6 +170,16 @@
                     <button id="download-btn" class="btn-download" style="display:none;">📥 Save Processed Files</button>
                 </div>
                 <div class="sidebar-footer">
+<<<<<<< HEAD
+                    <hr class="footer-divider">
+                    <a href="#" id="github-btn" class="support-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="github-icon">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        <span>Support the Dev</span>
+                    </a>
+                </div>
+=======
     <hr class="footer-divider">
     <a href="#" id="github-btn" class="support-link">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="github-icon">
@@ -98,6 +188,7 @@
         <span>Support the Dev</span>
     </a>
 </div>
+>>>>>>> c92ab8401fdf1d0d1268fe68e703ad6c984e99e4
             </section>
         </main>
     </div>
