@@ -33,7 +33,7 @@
 
 ---
 
-## 🚀 What's New in Version 1.2.0
+## 🚀 What's New in Version 1.3.0
 - **Native Screen Recorder:** High-fidelity capture with a sleek preview dashboard and real-time recording timer.
 - **Professional PDF Toolkit:** Offline PDF merging and splitting with an intuitive drag-to-reorder interface.
 - **Fluid Visual Experience:** Completely reworked animations and transitions for a smoother, high-end user experience.
