@@ -31,6 +31,15 @@
 
 
 
+<img width="1920" height="1040" alt="5" src="https://github.com/user-attachments/assets/95d551c6-48d2-4591-87cb-8912a6df6233" />
+
+
+
+
+<img width="1920" height="1080" alt="6" src="https://github.com/user-attachments/assets/80fcc975-2f41-4be0-9698-54e3848ec239" />
+
+
+
 ---
 
 ## 🚀 What's New in Version 1.3.0
