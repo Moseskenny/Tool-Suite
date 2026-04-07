@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolSuite Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcome-page" class="welcome-page">
+        <div class="welcome-logo">
+            <img src="../build/icon.png" alt="ToolSuite" />
+        </div>
+        <h1 class="welcome-title">ToolSuite</h1>
+        <p class="welcome-tagline">All-in-One Desktop Toolkit</p>
+        
+        <div class="welcome-tools">
+            <div class="welcome-tool" onclick="enterApp('compress')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <span>Compress</span>
+            </div>
+            <div class="welcome-tool" onclick="enterApp('organize')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                <span>Organize</span>
+            </div>
+            <div class="welcome-tool" onclick="enterApp('convert')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+                <span>Convert</span>
+            </div>
+            <div class="welcome-tool" onclick="enterApp('expense')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><path d="M12 12l3.5-3.5"/></svg>
+                <span>Expense</span>
+            </div>
+            <div class="welcome-tool" onclick="enterApp('recorder')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+                <span>Record</span>
+            </div>
+            <div class="welcome-tool" onclick="enterApp('pdftool')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                <span>PDF</span>
+            </div>
+        </div>
+        
+        <button class="welcome-cta" onclick="enterApp('compress')">Get Started</button>
+        
+        <p class="welcome-version">v1.3.0</p>
+    </div>
+    
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">
+                    <img src="../build/icon.png" alt="ToolSuite" />
+                </div>
+                <h1>ToolSuite</h1>
+            </div>
+            <div class="nav-group">
+                <button class="nav-btn" onclick="selectTool('compress')" id="btn-compress">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <span>Image Compressor</span>
+                </button>
+                <button class="nav-btn" onclick="selectTool('organize')" id="btn-organize">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                    <span>File Organizer</span>
+                </button>
+                <button class="nav-btn" onclick="selectTool('convert')" id="btn-convert">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+                    <span>Doc Converter</span>
+                </button>
+                <button class="nav-btn" onclick="selectTool('expense')" id="btn-expense">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/><path d="M12 12l3.5-3.5"/></svg>
+                    <span>Expense Analysis</span>
+                </button>
+                <button class="nav-btn" onclick="selectTool('recorder')" id="btn-recorder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+                    <span>Screen Recorder</span>
+                </button>
+                <button class="nav-btn" onclick="selectTool('pdftool')" id="btn-pdftool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                    <span>PDF Toolkit</span>
+                </button>
+            </div>
+            <div class="sidebar-footer"><p>v1.3.0</p></div>
+        </nav>
+
+        <main class="workspace">
+            <div class="titlebar">
+                <div class="window-controls">
+                    <button class="win-btn min-btn" id="win-min"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                    <button class="win-btn max-btn" id="win-max"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg></button>
+                    <button class="win-btn close-btn" id="win-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>
+            </div>
+
+            <div id="loading-bar" class="loading-bar"></div>
+            
+            <header class="workspace-header animate-fade">
+                <h2 id="tool-title">Image Compressor</h2>
+                <p id="tool-description">Click to select file.</p>
+            </header>
+
+            <section class="content-area animate-slide-up">
+                <div id="drop-zone" class="drop-zone elegant-card">
+                    <div class="drop-zone-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <p>Click to <strong>Select File</strong></p>
+                    </div>
+                </div>
+                <input type="file" id="file-input" multiple hidden>
+
+                <div id="compressor-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="slider-group">
+                        <div class="slider-header"><span>Quality</span><span id="quality-val" class="accent-text">80%</span></div>
+                        <input type="range" id="quality-slider" min="1" max="100" value="80" class="modern-slider">
+                    </div>
+                    <div class="preview-comparison">
+                        <div class="preview-box"><label>Original</label><div class="preview-placeholder-box" id="original-preview-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg><span>Select an image</span></div><img id="original-preview"><p id="original-size" class="estimated-size"></p></div>
+                        <div class="preview-box"><label>Compressed</label><div class="preview-placeholder-box" id="compressed-preview-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg><span>Click compress to see result</span></div><img id="compressed-preview"><p id="estimated-size" class="estimated-size"></p></div>
+                    </div>
+                </div>
+
+                <div id="converter-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="converter-status">
+                        <span id="detected-ext" class="format-badge">...</span>
+                        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <select id="target-format" class="modern-select">
+                            <option value="">Select a file first</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="recorder-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="recorder-header">
+                        <span class="recorder-title">Screen Recorder</span>
+                        <div class="recorder-meta">
+                            <span class="status-indicator ready" id="recorder-status-indicator"></span>
+                            <span id="recorder-fps">30 FPS</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-preview-area" id="recorder-preview">
+                        <div class="preview-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                            <span>Ready to record</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-info-bar">
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            <span>Full Screen</span>
+                        </div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span id="recorder-duration">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recorder-action">
+                        <button class="btn-record" id="record-btn" onclick="startRecording()">
+                            <span class="record-icon">●</span>
+                            <span>Start Recording</span>
+                        </button>
+                        <button class="btn-record btn-recording" id="stop-btn" onclick="stopRecording()" style="display:none;">
+                            <span class="record-icon">■</span>
+                            <span>Stop Recording</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pdftool-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div class="pdftool-modes">
+                        <button class="mode-btn active" id="merge-mode-btn" onclick="selectPdfMode('merge')">Merge PDFs</button>
+                        <button class="mode-btn" id="split-mode-btn" onclick="selectPdfMode('split')">Split PDF</button>
+                    </div>
+                    <div id="pdf-list" class="pdf-file-list"></div>
+                    <div id="split-options" class="split-options" style="display:none; margin-top: 15px;">
+                        <button class="btn-primary btn-green" id="analyze-btn" onclick="analyzePdf()" style="margin-bottom: 15px;">Analyze PDF</button>
+                        <div id="analyze-result" class="analyze-result" style="display:none; margin-bottom: 15px;"></div>
+                        <div id="split-input-area" class="split-input-area" style="display:none;">
+                            <label>Split at page: </label>
+                            <input type="number" id="split-page-input" min="1" value="1" style="width: 80px; padding: 8px; border-radius: 8px; background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-bar" id="action-bar" style="display:none; margin-top: 25px; text-align: center;">
+                    <button class="btn-primary" id="process-btn" onclick="processFiles()">Process Task</button>
+                </div>
+
+                <div id="preview-section" class="preview-section" style="margin-top: 20px;"></div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button id="download-btn" class="btn-download" style="display:none;">📥 Save Processed Files</button>
+                </div>
+                <div class="sidebar-footer">
+                    <hr class="footer-divider">
+                    <a href="#" id="github-btn" class="support-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="github-icon">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        <span>Support the Dev</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="toast" class="toast">Task Completed!</div>
+    <script src="renderer.js"></script>
+</body>
+</html>
