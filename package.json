@@ -1,15 +1,30 @@
 {
   "name": "toolsuite",
-  "version": "1.0.0",
+  "author": "Moses Kenny",
+  "version": "1.4.0",
   "description": "Premium Utility Toolkit",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "build": "electron-builder --win",
+    "postinstall": "electron-builder install-app-deps",
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.toolsuite.app",
+    "appId": "com.moseskenny.toolsuite",
     "productName": "ToolSuite",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "frontend/**/*",
+      "main.js",
+      "build/**/*",
+      "backend/dist/**/*",
+      "backend/modules/**/*",
+      "backend/app.py",
+      "backend/requirements.txt"
+    ],
     "extraResources": [
       {
         "from": "backend/dist/toolsuite-engine.exe",
@@ -17,14 +32,13 @@
       }
     ],
     "win": {
-      "target": "nsis",
-      "icon": "build/p.ico"
+      "target": ["nsis"],
+      "icon": "build/icon.png"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "runAfterFinish": true
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     }
   },
   "devDependencies": {
