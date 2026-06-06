@@ -11,10 +11,19 @@ import io
 import base64
 import warnings
 
+class MappingRequiredError(Exception):
+    def __init__(self, columns):
+        self.columns = columns
+        super().__init__("Manual column mapping required")
+
 class ExpenseAnalyzer:
-    def __init__(self, csv_path, is_splitwise=False):
+    def __init__(self, csv_path, is_splitwise=False, explicit_mapping=None):
         self.currency = "" 
-        self.df = self._huntsman_load(csv_path, is_splitwise)
+        self.raw_columns = []
+        if explicit_mapping:
+            self.df = self._load_with_explicit_mapping(csv_path, explicit_mapping)
+        else:
+            self.df = self._huntsman_load(csv_path, is_splitwise)
         self.df = self._categorize_expenses(self.df)
         self.subs = []
         self.habits = []
@@ -22,28 +31,70 @@ class ExpenseAnalyzer:
         self.score = 100
         self.prediction = {}
 
+    def _load_with_explicit_mapping(self, path, mapping):
+        df = self._read_file(path)
+        if df is None or df.empty:
+            raise ValueError("Critical Error: Could not read the file.")
+
+        df = df.dropna(how='all').dropna(axis=1, how='all')
+        original = list(df.columns)
+        df.columns = [str(c).strip().lower() for c in df.columns]
+
+        lower_to_original = {str(c).strip().lower(): c for c in original}
+        final_map = {}
+        target_keys = ['date', 'desc', 'amt']
+        user_map = {k.lower() if isinstance(k, str) else k: v for k, v in mapping.items()}
+
+        for key in target_keys:
+            user_col = user_map.get(key)
+            if user_col:
+                lower_col = user_col.strip().lower()
+                if lower_col in df.columns:
+                    col_name_key = {'date': 'Date', 'desc': 'Desc', 'amt': 'Amt'}
+                    final_map[lower_col] = col_name_key[key]
+
+        df = df.rename(columns=final_map)
+
+        symbols = ['$', '€', '£', '₹', '¥', '₽', '₩', 'A$', 'C$', 'Rs']
+        for col_name in df.columns:
+            for sym in symbols:
+                if sym in str(col_name):
+                    self.currency = sym
+                    break
+
+        df['Amt'] = pd.to_numeric(df['Amt'].astype(str).str.replace(r'[^\d.-]', '', regex=True), errors='coerce').fillna(0)
+        if 'Desc' in df.columns:
+            df['Desc'] = df['Desc'].fillna('Unknown').astype(str)
+            df['Desc'] = df['Desc'].replace(r'^\s*$', 'Unknown', regex=True)
+
+        available = [c for c in ['Date', 'Desc', 'Amt'] if c in df.columns]
+        if df.empty:
+            raise ValueError("The file was read but contains no usable data.")
+        return df[available]
+
+    def _read_file(self, path):
+        try:
+            return pd.read_excel(path)
+        except Exception:
+            pass
+        encodings = ['utf-8-sig', 'utf-8', 'cp1252', 'latin1', 'iso-8859-1']
+        for enc in encodings:
+            try:
+                return pd.read_csv(path, sep=None, engine='python', encoding=enc, on_bad_lines='skip')
+            except Exception:
+                continue
+        return None
+
     def _huntsman_load(self, path, is_splitwise):
         """The original, stable Universal Reader."""
-        df = None
-
-        # 1. Try Excel first
-        try:
-            df = pd.read_excel(path)
-        except Exception:
-            # 2. Fallback: Try multiple text encodings
-            encodings = ['utf-8-sig', 'utf-8', 'cp1252', 'latin1', 'iso-8859-1']
-            for enc in encodings:
-                try:
-                    df = pd.read_csv(path, sep=None, engine='python', encoding=enc, on_bad_lines='skip')
-                    break
-                except Exception:
-                    continue
+        df = self._read_file(path)
 
         if df is None or df.empty:
             raise ValueError("Critical Error: Could not read the file.")
 
         # 3. Clean garbage metadata and lowercase headers
         df = df.dropna(how='all').dropna(axis=1, how='all')
+        self.raw_columns = list(df.columns)
         df.columns = [str(c).strip().lower() for c in df.columns]
 
         # 4. Extraction Mapping
@@ -59,6 +110,11 @@ class ExpenseAnalyzer:
                 if any(s in col for s in syns):
                     mapping[col] = key 
                     break
+
+        found_targets = set(mapping.values())
+        needed = {'Date', 'Desc', 'Amt'}
+        if not needed.issubset(found_targets):
+            raise MappingRequiredError(self.raw_columns)
         
         # 5. Currency Detection
         symbols = ['$', '€', '£', '₹', '¥', '₽', '₩', 'A$', 'C$', 'Rs']

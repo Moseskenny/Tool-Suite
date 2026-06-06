@@ -43,7 +43,7 @@ def run_compression(files, quality, temp_dir):
         compressed_files.append(filename)
 
     return {
-        "type": "success",
+        "status": "success",
         "message": f"Successfully compressed {len(files)} images. Ready to save.",
         "count": len(files),
     }
