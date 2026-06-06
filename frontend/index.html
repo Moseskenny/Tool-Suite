@@ -81,7 +81,11 @@
                     <span>PDF Toolkit</span>
                 </button>
             </div>
-            <div class="sidebar-footer"><p>v1.3.0</p></div>
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <button class="help-btn" onclick="showOnboarding()" title="Help & Tour">?</button>
+                <p>v1.3.0</p>
+            </div>
         </nav>
 
         <main class="workspace">
@@ -108,6 +112,7 @@
                     </div>
                 </div>
                 <input type="file" id="file-input" multiple hidden>
+                <div id="expense-file-name" class="expense-file-badge" style="display:none;"></div>
 
                 <div id="compressor-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
                     <div class="slider-group">
@@ -120,13 +125,41 @@
                     </div>
                 </div>
 
-                <div id="converter-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
-                    <div class="converter-status">
-                        <span id="detected-ext" class="format-badge">...</span>
+                <!-- Converter Step 2: Setup -->
+                <div id="converter-setup" class="tool-ui elegant-card converter-step" style="display:none; margin-top: 20px;">
+                    <button class="btn-back" onclick="converterBackToStep1()">← Back</button>
+                    <div class="conv-step-header">
+                        <div class="conv-file-badge">
+                            <span id="conv-step2-name" class="conv-filename"></span>
+                            <span id="conv-step2-meta" class="conv-filemeta"></span>
+                        </div>
+                    </div>
+                    <div class="conv-convert-row">
+                        <span id="conv-step2-source" class="format-badge">...</span>
                         <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        <select id="target-format" class="modern-select">
-                            <option value="">Select a file first</option>
-                        </select>
+                        <div id="conv-step2-grid" class="format-grid"></div>
+                    </div>
+                    <div class="conv-action-row">
+                        <button class="btn-primary btn-convert" onclick="processFiles()">▶ Convert</button>
+                    </div>
+                </div>
+
+                <!-- Converter Step 3: Result -->
+                <div id="converter-result" class="tool-ui elegant-card converter-step" style="display:none; margin-top: 20px;">
+                    <button class="btn-back" onclick="converterBackToStep2()">← Back</button>
+                    <div class="conv-result-content">
+                        <div id="conv-result-status" class="conv-result-status"></div>
+                        <div id="conv-result-details" class="conv-result-details"></div>
+                    </div>
+                    <div class="conv-result-actions">
+                        <button id="conv-download-btn" class="btn-primary" style="display:none;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Save File
+                        </button>
+                        <button class="btn-secondary" onclick="converterConvertAnother()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                            Convert Another
+                        </button>
                     </div>
                 </div>
 
@@ -169,12 +202,36 @@
                     </div>
                 </div>
 
+                <!-- Expense Manual Mapping UI -->
+                <div id="expense-mapping-ui" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
+                    <div style="padding: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            <h3 style="color: var(--text-main); margin: 0 0 4px;">Column Mapping Required</h3>
+                            <p style="color: var(--text-dim); font-size: 0.85rem; margin: 0;">Select which column in your file corresponds to each field</p>
+                        </div>
+                        <div class="mapping-row"><label>📅 Date Column</label><select id="map-date" class="map-select"></select></div>
+                        <div class="mapping-row"><label>📝 Description Column</label><select id="map-desc" class="map-select"></select></div>
+                        <div class="mapping-row"><label>💰 Amount Column</label><select id="map-amt" class="map-select"></select></div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn-primary" onclick="applyColumnMapping()">Apply Mapping</button>
+                            <button class="btn-secondary" onclick="showMappingError()" style="margin-left: 10px;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="pdftool-controls" class="tool-ui elegant-card" style="display:none; margin-top: 20px;">
                     <div class="pdftool-modes">
                         <button class="mode-btn active" id="merge-mode-btn" onclick="selectPdfMode('merge')">Merge PDFs</button>
                         <button class="mode-btn" id="split-mode-btn" onclick="selectPdfMode('split')">Split PDF</button>
                     </div>
                     <div id="pdf-list" class="pdf-file-list"></div>
+                    <div id="pdf-list-actions" style="display:none; text-align: right; margin-bottom: 10px;">
+                        <button class="btn-secondary" onclick="clearAllPdfFiles()" style="padding: 6px 14px; font-size: 0.8rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            Clear All
+                        </button>
+                    </div>
                     <div id="split-options" class="split-options" style="display:none; margin-top: 15px;">
                         <button class="btn-primary btn-green" id="analyze-btn" onclick="analyzePdf()" style="margin-bottom: 15px;">Analyze PDF</button>
                         <div id="analyze-result" class="analyze-result" style="display:none; margin-bottom: 15px;"></div>
@@ -207,6 +264,23 @@
         </main>
     </div>
     <div id="toast" class="toast">Task Completed!</div>
+
+    <!-- Onboarding Overlay -->
+    <div id="onboarding-overlay" class="onboarding-overlay">
+        <div class="onboarding-card">
+            <div id="onboarding-icon" class="onboarding-icon"></div>
+            <h2 id="onboarding-title"></h2>
+            <p id="onboarding-desc"></p>
+            <div id="onboarding-content"></div>
+            <div id="onboarding-dots" class="onboarding-progress"></div>
+            <div class="onboarding-nav">
+                <button id="onboarding-prev" class="btn-secondary" onclick="prevOnboardingStep()">← Back</button>
+                <button id="onboarding-next" class="btn-primary" onclick="nextOnboardingStep()">Next →</button>
+            </div>
+            <button id="onboarding-skip" class="onboarding-skip" onclick="hideOnboarding()">Skip</button>
+        </div>
+    </div>
+
     <script src="renderer.js"></script>
 </body>
 </html>
