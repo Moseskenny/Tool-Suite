@@ -5,14 +5,16 @@ from fastapi.responses import FileResponse
 import shutil
 import os
 import sys
+import re
 import uvicorn
 import tempfile
+import threading
 
 # Custom modules
 from modules.compressor import get_preview, run_compression
-from modules.fileoragnizer import run_organizer
-from modules.converter import run_conversion
-from modules.analyzer_logic import ExpenseAnalyzer
+from modules.fileorganizer import run_organizer
+from modules.converter import run_conversion, analyze_files
+from modules.analyzer_logic import ExpenseAnalyzer, MappingRequiredError
 from modules.screen_recorder import run_screen_recorder
 from modules.pdf_toolkit import run_pdf_toolkit
 
@@ -56,6 +58,29 @@ class ExportRequest(BaseModel):
     destination: str
 
 
+def _format_size(bytes_val):
+    for unit in ['B', 'KB', 'MB', 'GB']:
+        if bytes_val < 1024:
+            return f"{bytes_val:.1f} {unit}"
+        bytes_val /= 1024
+    return f"{bytes_val:.1f} TB"
+
+
+# --- Global Conversion Progress ---
+conversion_progress = {"percent": 0, "status": "idle", "message": ""}
+_progress_lock = threading.Lock()
+
+
+def _set_progress(percent, status=None, message=None):
+    global conversion_progress
+    with _progress_lock:
+        conversion_progress["percent"] = percent
+        if status:
+            conversion_progress["status"] = status
+        if message:
+            conversion_progress["message"] = message
+
+
 # --- COMPRESSOR, ORGANIZER & CONVERTER ROUTES ---
 
 
@@ -64,23 +89,89 @@ async def health_check():
     return {"status": "ready"}
 
 
+@app.get("/convert-progress")
+async def get_convert_progress():
+    with _progress_lock:
+        return dict(conversion_progress)
+
+
 @app.post("/process-convert")
-async def process_convert(
+def process_convert(
     files: list[UploadFile] = File(...), target_format: str = Form(...)
 ):
-    return run_conversion(files, target_format, TEMP_CONVERT_DIR)
+    _set_progress(0, "processing", "Starting conversion...")
+
+    def progress_cb(pct):
+        _set_progress(pct, "processing", f"Converting... {pct}%")
+
+    result = run_conversion(files, target_format, TEMP_CONVERT_DIR, progress_callback=progress_cb)
+
+    if result.get("status") == "success":
+        _set_progress(100, "complete", "Conversion complete")
+    else:
+        _set_progress(0, "error", result.get("message", "Conversion failed"))
+
+    return result
+
+
+@app.post("/analyze-conversion")
+async def analyze_conversion(files: list[UploadFile] = File(...)):
+    return analyze_files(files, TEMP_CONVERT_DIR)
 
 
 @app.post("/export-converted")
 async def export_converted(request: ExportRequest):
     try:
-        for filename in os.listdir(TEMP_CONVERT_DIR):
+        if not os.path.exists(TEMP_CONVERT_DIR):
+            return {"status": "error", "message": "Temp directory missing. Please convert again."}
+
+        all_items = os.listdir(TEMP_CONVERT_DIR)
+        filenames = [f for f in all_items if os.path.isfile(os.path.join(TEMP_CONVERT_DIR, f))]
+
+        print(f"[Export] Destination: {request.destination}")
+        print(f"[Export] Files found in temp: {filenames}")
+
+        if not filenames:
+            return {"status": "error", "message": "No converted files found. Please convert again."}
+
+        saved = 0
+        errors = []
+        saved_files = []
+        for filename in filenames:
             src = os.path.join(TEMP_CONVERT_DIR, filename)
-            dest = os.path.join(request.destination, filename)
-            shutil.copy2(src, dest)
-        return {"message": f"Files saved to {request.destination}"}
+            src_size = os.path.getsize(src)
+            print(f"[Export] Processing: {filename} ({src_size} bytes)")
+            if src_size == 0:
+                print(f"[Export] Skipping empty file: {filename}")
+                continue
+            clean_name = re.sub(r'^converted_', '', filename)
+            dest = os.path.join(request.destination, clean_name)
+            if os.path.exists(dest):
+                base, ext = os.path.splitext(clean_name)
+                counter = 1
+                while os.path.exists(os.path.join(request.destination, f"{base}_{counter}{ext}")):
+                    counter += 1
+                dest = os.path.join(request.destination, f"{base}_{counter}{ext}")
+            try:
+                shutil.copy2(src, dest)
+                saved += 1
+                saved_files.append(os.path.basename(dest))
+                print(f"[Export] Copied to: {dest}")
+            except Exception as copy_err:
+                errors.append(f"{clean_name}: {str(copy_err)}")
+                print(f"[Export] FAILED: {clean_name} - {copy_err}")
+
+        print(f"[Export] Result: {saved} file(s) saved = {saved_files}")
+
+        if saved == 0:
+            return {"status": "error", "message": "Could not save any files. The converted file may be empty."}
+
+        msg = f"{saved} file(s) saved"
+        if errors:
+            msg += f" ({len(errors)} skipped: {'; '.join(errors)})"
+        return {"status": "success", "message": msg, "files": saved_files}
     except Exception as e:
-        return {"error": str(e)}
+        return {"status": "error", "message": str(e)}
 
 
 @app.post("/organize-local")
@@ -143,7 +234,17 @@ async def analyze_endpoint(
         f.write(await file.read())
 
     # 2. Process Data
-    analyzer = ExpenseAnalyzer(temp_csv, is_splitwise=is_splitwise)
+    try:
+        analyzer = ExpenseAnalyzer(temp_csv, is_splitwise=is_splitwise)
+    except MappingRequiredError as e:
+        return {
+            "requires_mapping": True,
+            "columns": e.columns,
+            "filename": file.filename,
+        }
+    except ValueError as e:
+        return {"error": str(e)}
+
     prediction = analyzer.run_intelligence(price)
 
     # 3. Create PDF
@@ -154,6 +255,41 @@ async def analyze_endpoint(
     return {
         "prediction": prediction,
         "report_name": report_name,  # Return filename, not absolute path
+    }
+
+
+@app.post("/analyze-manual")
+async def analyze_manual_endpoint(
+    file: UploadFile = File(...),
+    price: float = Form(0.0),
+    is_splitwise: bool = Form(False),
+    date_col: str = Form(""),
+    desc_col: str = Form(""),
+    amt_col: str = Form(""),
+):
+    temp_csv = os.path.join(UPLOAD_DIR, file.filename)
+    with open(temp_csv, "wb") as f:
+        f.write(await file.read())
+
+    mapping = {}
+    if date_col: mapping["date"] = date_col
+    if desc_col: mapping["desc"] = desc_col
+    if amt_col: mapping["amt"] = amt_col
+
+    try:
+        analyzer = ExpenseAnalyzer(temp_csv, is_splitwise=is_splitwise, explicit_mapping=mapping)
+    except ValueError as e:
+        return {"error": str(e)}
+
+    prediction = analyzer.run_intelligence(price)
+
+    report_name = f"Report_{file.filename.split('.')[0]}.pdf"
+    report_path = os.path.join(REPORT_DIR, report_name)
+    analyzer.generate_pdf(report_path)
+
+    return {
+        "prediction": prediction,
+        "report_name": report_name,
     }
 
 

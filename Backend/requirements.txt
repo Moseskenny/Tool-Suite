@@ -14,7 +14,9 @@ imageio
 imageio-ffmpeg
 Pillow
 markdown
-fpdf
-docx2pdf
+fpdf2
 img2pdf
 matplotlib
+PyMuPDF
+python-pptx
+weasyprint
